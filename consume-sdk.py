@@ -3,28 +3,37 @@ from tkinter import END
 from book import Book
 import bookSDK
 
+books = []
 
 def add_to_list():
 
     book = Book(title_entry.get(), pages_entry.get())
     
     if (bookSDK.add_book(book)): 
+        books.append(book)
         listbox.insert(END, book)
         title_entry.delete(0,END)
         pages_entry.delete(0,END)
 
 def remove_from_list():
-    listbox.delete(listbox.curselection())
-
-
+    book_tuple = listbox.curselection()
+    book = books.pop(book_tuple[0])
+    if (bookSDK.delete_book(book)):
+        listbox.delete(book_tuple)
+        
 
 tk = tkinter.Tk()
 tk.title('Testing a listbox')
 
-
 listbox = tkinter.Listbox(tk)
 listbox.pack()
 
+
+for book in bookSDK.get_books():
+    books.append(book)
+    listbox.insert(END, book)
+
+ 
 title = tkinter.Label(tk, text= "Book title:")
 title.pack()
 
@@ -37,7 +46,6 @@ pages.pack()
 pages_entry = tkinter.Entry(tk)
 pages_entry.pack()
 
-
 button = tkinter.Button(tk, text= 'Add Book', command=add_to_list)
 button.pack()
 
@@ -45,6 +53,15 @@ button = tkinter.Button(tk, text= 'Remove Selected Book', command=remove_from_li
 button.pack()
 
 tk.mainloop()
+
+
+    
+        
+
+
+
+
+
 
 
 
